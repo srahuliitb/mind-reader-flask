@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Mind Reader Game</title>
+    <link rel="icon" type="image/png" href="http://candiaoaks.com/wp-content/uploads/2017/12/open-mind-ladder.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+
+  <body>
+      <div class="main-container">
+        <h6 id="title" style="text-align: center;font-size:3vw;"><img class="img-responsive" style="margin-bottom: -50px; border-radius: 45px; display: inline-block; background-color:white; width: 100px; height:92px" src="/public/Game.png" alt="mind reader logo img">MIND READER GAME<hr style="margin-top: 30px;"></h6>
+        <div class="image-wrapper center" id="AI_img">
+          <img style="margin-top:20px;" class="img-responsive" src="/public/so.png">
+        </div>
+        <div class="container">
+          <div class="row">
+              <div class="col-md-12 col-xs-12 count-wrapper">
+                <div class="cont">
+                  <canvas  id="myCanvas"></canvas>
+        
+        
+        <div class="button-container">
+          <div id="lose"></div>
+          <form class="" action="/" method="post">
+            {% if GameDetails['user_score'] >= 50 or GameDetails['comp_score'] >= 50 %}
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 user">
+              <div class="progress vertical">
+                  <div id="user_progress" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="50" style="width: {{ GameDetails['user_score']*2 }}%">
+                    </div>  
+                  </div>
+              <div> <img style="margin-bottom: 10px; display: inline-block; width: 75px; height:103px" class="img-responsive" src="/public/User.png">
+              </div>
+              <div id="players">USER</div>
+              <div style="margin-bottom: 10px; display:block;" id="data_user"></div>
+              <button name ="submit_button" class="btn btn_ht" value="0" disabled>HEAD</button>
+            </div> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" id="score">SCORE</div>
+            
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 comp">
+              <div class="progress vertical">
+                <div id="bot_progress" class="progress-bar progress-bar-succes" role="progressbar" aria-valuenow="21" aria-valuemin="0" aria-valuemax="50" style="width:{{ GameDetails['comp_score']*2 }}%">
+                </div>  
+              </div>
+              <div> <img style="margin-bottom: 10px; display: inline-block; width: 75px; height:103px" class="img-responsive" src="/public/AI_Bot_2.png">
+              </div>
+              <div id="players">AI BOT</div>
+              <div style="margin-bottom: 10px; display:block;" id="data_bot"></div>
+              <button name ="submit_button"  class="btn btn_ht" value="1" disabled>TAIL</button>
+              </div>
+              {% else %}
+              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 user">
+                <div class="progress vertical">
+                    <div id="user_progress" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="50" style="width: {{ GameDetails['user_score']*2 }}%">
+                      </div>  
+                    </div>
+                <div> <img style="margin-bottom: 10px; display: inline-block; width: 75px; height:103px" class="img-responsive" src="/public/User.png">
+                </div>
+                <div id="players">USER</div>
+                <div style="margin-bottom: 10px; display:block;" id="data_user"></div>
+                <button name ="submit_button" class="btn btn_ht" value="0">HEAD</button>
+              </div> 
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" id="score">SCORE</div>
+              
+              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 comp">
+                <div class="progress vertical">
+                  <div id="bot_progress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="21" aria-valuemin="0" aria-valuemax="50" style="width:{{ GameDetails['comp_score']*2 }}%">
+                  </div>  
+                </div>
+                <div> <img style="margin-bottom: 10px; display: inline-block; width: 75px; height:103px" class="img-responsive" src="/public/AI_Bot_2.png">
+                </div>
+                <div id="players">AI BOT</div>
+                <div style="margin-bottom: 10px; display:block;" id="data_bot"></div>
+                <button name ="submit_button"  class="btn btn_ht" value="1">TAIL</button>
+                </div>
+              </div>
+            {% endif%}
+        </form>
+        <form action="/reset" method="get">
+          <button class="btn_res" value="reset">RESTART</button>
+        </form>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // This Script maintains the basic graphics of the game
+        var userScore = {{ GameDetails['user_score'] }}
+        var botScore = {{ GameDetails['comp_score'] }}
+
+        //graphics variables
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var GUIscoreWidth = canvas.width*0.2;
+        var GUIscoreHeight = canvas.height*0.007/0.5;
+        var GUIuserScoreParam = {x: canvas.width/2-GUIscoreWidth-GUIscoreWidth/4,  y: canvas.height-20, y_text: canvas.height-5, color: "blue"};
+        var GUIbotScoreParam = {x: canvas.width/2+GUIscoreWidth/4, y: canvas.height-20, y_text: canvas.height-5, color: "red"};
+        var GUIendMessage = {x: canvas.width/2, y: 15 , color: "black"};
+
+        //Main screen refresh function
+        function draw() {
+
+          drawScores();
+
+        }
+        draw();
+
+        //Draw the two bar scores
+        function drawScores() {
+          
+          //Draw the user text
+          document.getElementById("data_user").innerHTML=userScore;
+          //Draw the bot text
+          document.getElementById("data_bot").innerHTML=botScore;
+
+          if (userScore >= 50) {
+            document.getElementById("lose").innerHTML="YAY ! You Won !!"
+          }
+          else if (botScore >= 50) {
+            document.getElementById("lose").innerHTML="AI BOT Wins !!"
+          }
+        }
+      </script>
+  </body>
+</html>
+
