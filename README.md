@@ -10,6 +10,10 @@ Following tools are used to create this game:
 4. Flask 1.1.1
 5. JavaScript 1.7
 
+Go to the `mind-reader-flask` directory by running the following command:
+
+`cd mind-reader-flask`
+
 Run the following command to install the dependencies:
 
 `pip3 install -r requirements.txt`
