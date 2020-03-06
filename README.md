@@ -9,3 +9,7 @@ Following tools are used to create this game:
 3. Python 3.7 
 4. Flask 1.1.1
 5. JavaScript 1.7
+
+run the following command to install the dependencies
+
+`pip3 install -r requirements.txt`
