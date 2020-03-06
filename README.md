@@ -15,4 +15,5 @@ Run the following command to install the dependencies:
 `pip3 install -r requirements.txt`
 
 Run the following command to run the game:
+
 `python3 server.py`
