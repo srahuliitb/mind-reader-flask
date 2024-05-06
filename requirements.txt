@@ -1,4 +1,4 @@
 numpy
 flask
 Flask-Session
-werkzeug==0.16.00
+werkzeug
