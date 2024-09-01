@@ -2,15 +2,14 @@ from flask import Flask, request, render_template, session, url_for, redirect
 from game import *
 from flask_session import Session
 
-
 mind_reader = ShannonExpert()
 
 app = Flask(__name__, static_folder='public', template_folder='views')
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['SECRET_KEY'] = 'the random string'
-#app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 Session(app)
+
 
 @app.route("/", methods=["GET", "POST"])
 def start():
@@ -41,6 +40,7 @@ def start():
 
         return redirect (url_for('start'))
 
+
 @app.after_request
 def add_header(r):
     """
@@ -52,7 +52,6 @@ def add_header(r):
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
-
 
 
 @app.route('/reset')
