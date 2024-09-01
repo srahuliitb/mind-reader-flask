@@ -16,20 +16,20 @@ The following tools are used to create this game:
 ### How to Run
 Go to the `mind-reader-flask` directory
 
-    `cd mind-reader-flask`
+    cd mind-reader-flask
 
 Create a new environment variable
 
-    `python -m venv game-venv`
+    python -m venv game-venv
 
-- Activate the virtual environment
+Activate the virtual environment
 
-    `source game-venv/bin/activate`
+    source game-venv/bin/activate
 
 Install the dependencies
 
-    `pip3 install -r requirements.txt`
+    pip3 install -r requirements.txt
 
 Run the game
 
-    `python3 app.py`
+    python3 app.py
